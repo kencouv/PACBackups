@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Backup Monitoring Dashboard</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js" defer></script>
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <header>
+    <div class="header-left">
+      <i class="fas fa-server"></i>
+      <h1>Backup Monitoring Dashboard</h1>
+    </div>
+    <div class="header-right">
+      <button id="refresh-btn"><i class="fas fa-sync-alt"></i> Refresh</button>
+      <div id="last-updated">Last updated: <span id="update-time">Loading...</span></div>
+    </div>
+  </header>
+
+  <main>
+    <!-- SUMMARY CARDS -->
+    <section class="summary-cards">
+      <div class="card">
+        <div class="card-icon total">
+          <i class="fas fa-database"></i>
+        </div>
+        <div class="card-content">
+          <h3>TOTAL BACKUPS</h3>
+          <div class="card-value" id="total-backups">0</div>
+          <div class="card-subtitle">All backup jobs</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-icon success">
+          <i class="fas fa-check-circle"></i>
+        </div>
+        <div class="card-content">
+          <h3>SUCCESSFUL</h3>
+          <div class="card-value" id="successful-backups">0</div>
+          <div class="card-subtitle">Completed backups</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-icon warning">
+          <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <div class="card-content">
+          <h3>WARNINGS</h3>
+          <div class="card-value" id="warning-backups">0</div>
+          <div class="card-subtitle">Partial successes</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-icon failed">
+          <i class="fas fa-times-circle"></i>
+        </div>
+        <div class="card-content">
+          <h3>FAILED</h3>
+          <div class="card-value" id="failed-backups">0</div>
+          <div class="card-subtitle">Backups needing attention</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FILTERS -->
+    <section class="filters">
+      <div class="filter-group">
+        <label for="status-filter">Status</label>
+        <select id="status-filter">
+          <option>All Statuses</option>
+          <option>Successful</option>
+          <option>Warning</option>
+          <option>Failed</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label for="device-filter">Device</label>
+        <select id="device-filter">
+          <option value="All">All Devices</option>
+          <!-- Populated by JS -->
+        </select>
+      </div>
+      <div class="filter-group">
+        <label for="source-filter">Source</label>
+        <select id="source-filter">
+          <option value="All">All Sources</option>
+          <option value="IDrive">IDrive</option>
+          <option value="Datto">Datto</option>
+          <option value="Acronis">Acronis</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label for="date-filter">Time Range</label>
+        <select id="date-filter">
+          <option value="1">Last day</option>
+          <option value="2">Last 2 days</option>
+          <option value="7">Last 7 days</option>
+          <option value="30">Last 30 days</option>
+          <option value="90">Last 90 days</option>
+          <option value="all">All time</option>
+        </select>
+      </div>
+      <button id="apply-filters"><i class="fas fa-filter"></i> Apply Filters</button>
+    </section>
+
+    <!-- BACKUPS TABLE -->
+    <section class="backup-table">
+      <table id="backups-table">
+        <thead>
+          <tr>
+            <th data-col="status">STATUS <span class="sort"></span></th>
+            <th data-col="device">DEVICE NAME <span class="sort"></span></th>
+            <th data-col="source">SOURCE <span class="sort"></span></th>
+            <th data-col="start">LAST BACKUP <span class="sort"></span></th>
+            <th data-col="backedUp">FILES BACKED UP <span class="sort"></span></th>
+            <th data-col="failed">FILES FAILED <span class="sort"></span></th>
+            <th data-col="considered">TOTAL SIZE <span class="sort"></span></th>
+          </tr>
+        </thead>
+        <tbody id="backups-data">
+          <tr><td colspan="7" class="loading-message">Loading backup data...</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+</body>
+</html>
